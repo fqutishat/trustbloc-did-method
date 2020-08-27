@@ -17,6 +17,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/trustbloc/trustbloc-did-method/test/bdd/pkg/common"
+
 	"github.com/cucumber/godog"
 
 	"github.com/trustbloc/trustbloc-did-method/test/bdd/dockerutil"
@@ -173,4 +175,5 @@ func FeatureContext(s *godog.Suite) {
 	}
 
 	vdri.NewSteps(bddContext).RegisterSteps(s)
+	common.NewSteps(bddContext).RegisterSteps(s)
 }

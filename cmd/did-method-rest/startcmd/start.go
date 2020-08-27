@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/trustbloc/trustbloc-did-method/pkg/restapi/healthcheck"
+
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
 	cmdutils "github.com/trustbloc/edge-core/pkg/utils/cmd"
@@ -223,8 +225,17 @@ func startDidMethod(parameters *parameters) error {
 		return err
 	}
 
-	handlers := didMethodService.GetOperations()
 	router := mux.NewRouter()
+
+	// add health check endpoint
+	healthCheckService := healthcheck.New()
+
+	healthCheckHandlers := healthCheckService.GetOperations()
+	for _, handler := range healthCheckHandlers {
+		router.HandleFunc(handler.Path(), handler.Handle()).Methods(handler.Method())
+	}
+
+	handlers := didMethodService.GetOperations()
 
 	for _, handler := range handlers {
 		router.HandleFunc(handler.Path(), handler.Handle()).Methods(handler.Method())
